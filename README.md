@@ -142,4 +142,4 @@ npm start
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 👥 Contributors
-- [Taham](https://github.com/tah4mis) 
+- [Tahamis](https://github.com/tah4mis) 
