@@ -1,0 +1,236 @@
+@model VehicleAuction.Web.Models.Vehicle
+
+@{
+    ViewData["Title"] = $"{Model.Brand} {Model.Model} Detayları";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">@Model.Brand @Model.Model</h2>
+                    
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <img src="@Model.ImageUrl" alt="@Model.Brand @Model.Model" class="img-fluid rounded mb-4" style="max-height: 400px; width: 100%; object-fit: cover;" />
+                    }
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Temel Bilgiler</h5>
+                            <table class="table">
+                                <tr>
+                                    <th>Marka</th>
+                                    <td>@Model.Brand</td>
+                                </tr>
+                                <tr>
+                                    <th>Model</th>
+                                    <td>@Model.Model</td>
+                                </tr>
+                                <tr>
+                                    <th>Yıl</th>
+                                    <td>@Model.Year</td>
+                                </tr>
+                                <tr>
+                                    <th>Kilometre</th>
+                                    <td>@Model.Mileage.ToString("N0") km</td>
+                                </tr>
+                                <tr>
+                                    <th>Fiyat</th>
+                                    <td>@Model.Price.ToString("C")</td>
+                                </tr>
+                                @if (Model.EstimatedPrice.HasValue)
+                                {
+                                    <tr>
+                                        <th>Tahmini Fiyat</th>
+                                        <td>@Model.EstimatedPrice.Value.ToString("C")</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <th>Durum</th>
+                                    <td>
+                                        @if (Model.IsAvailable)
+                                        {
+                                            <span class="badge bg-success">Müsait</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Müsait Değil</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Açıklama</h5>
+                            <p class="text-muted">@Model.Description</p>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3">Araç Özellikleri</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ul class="list-unstyled">
+                                @if (Model.ABS)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> ABS</li>
+                                }
+                                @if (Model.ASR)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> ASR</li>
+                                }
+                                @if (Model.CocukKilidi)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Çocuk Kilidi</li>
+                                }
+                                @if (Model.Distronic)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Distronic</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul class="list-unstyled">
+                                @if (Model.ESP)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> ESP</li>
+                                }
+                                @if (Model.GeceGorusSistemi)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Gece Görüş Sistemi</li>
+                                }
+                                @if (Model.HavaYastigiSurucu)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Sürücü Hava Yastığı</li>
+                                }
+                                @if (Model.HavaYastigiYolcu)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Yolcu Hava Yastığı</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul class="list-unstyled">
+                                @if (Model.Immobilizer)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Immobilizer</li>
+                                }
+                                @if (Model.Isofix)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Isofix</li>
+                                }
+                                @if (Model.KorNoktaUyariSistemi)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Kör Nokta Uyarı Sistemi</li>
+                                }
+                                @if (Model.MerkeziKilit)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Merkezi Kilit</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <ul class="list-unstyled">
+                                @if (Model.SeritTakipSistemi)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Şerit Takip Sistemi</li>
+                                }
+                                @if (Model.YokusKalkisDesteği)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Yokuş Kalkış Desteği</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul class="list-unstyled">
+                                @if (Model.YorgunlukTespitSistemi)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Yorgunluk Tespit Sistemi</li>
+                                }
+                                @if (Model.ZirhliArac)
+                                {
+                                    <li><i class="fas fa-check text-success"></i> Zırhlı Araç</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">İşlemler</h5>
+                    <div class="d-grid gap-2">
+                        @if (Model.IsAvailable)
+                        {
+                            <a asp-controller="Auction" asp-action="Create" asp-route-vehicleId="@Model.Id" class="btn btn-primary">
+                                <i class="fas fa-gavel"></i> Müzayedeye Ekle
+                            </a>
+                        }
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Düzenle
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Sil
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Listeye Dön
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @if (ViewBag.ActiveAuctions != null && ViewBag.ActiveAuctions.Count > 0)
+            {
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Aktif Müzayedeler</h5>
+                        @foreach (var auction in ViewBag.ActiveAuctions)
+                        {
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        Başlangıç: @auction.StartDate.ToString("dd/MM/yyyy HH:mm")
+                                    </h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        Bitiş: @auction.EndDate.ToString("dd/MM/yyyy HH:mm")
+                                    </h6>
+                                    <p class="card-text">
+                                        <strong>Mevcut Fiyat:</strong> 
+                                        @{
+                                            decimal currentPrice = auction.StartingPrice;
+                                            if (auction.Bids != null && auction.Bids.Count > 0)
+                                            {
+                                                decimal maxBid = auction.StartingPrice;
+                                                foreach (var bid in auction.Bids)
+                                                {
+                                                    if (bid.Amount > maxBid)
+                                                    {
+                                                        maxBid = bid.Amount;
+                                                    }
+                                                }
+                                                currentPrice = maxBid;
+                                            }
+                                        }
+                                        @currentPrice.ToString("C")
+                                    </p>
+                                    <a asp-controller="Auction" asp-action="Details" asp-route-id="@auction.Id" class="btn btn-sm btn-primary">
+                                        Detaylar
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+} 

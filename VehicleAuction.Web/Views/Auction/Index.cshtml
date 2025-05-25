@@ -1,0 +1,105 @@
+@model IEnumerable<VehicleAuction.Web.Models.Auction>
+
+@{
+    ViewData["Title"] = "İhale Listesi";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewData["Title"]</h3>
+                    <div class="card-tools">
+                        <a asp-action="Create" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Yeni İhale
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.Vehicle)</th>
+                                    <th>@Html.DisplayNameFor(model => model.StartingPrice)</th>
+                                    <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+                                    <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Status)</th>
+                                    <th>Son Teklif</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var lastBid = item.Bids.OrderByDescending(b => b.Amount).FirstOrDefault();
+                                    <tr>
+                                        <td>@(item.Vehicle?.Brand ?? "Belirtilmemiş") @(item.Vehicle?.Model ?? "")</td>
+                                        <td>@Html.DisplayFor(modelItem => item.StartingPrice) ₺</td>
+                                        <td>@item.StartDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>@item.EndDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td>
+                                            @switch (item.Status)
+                                            {
+                                                case AuctionStatus.Pending:
+                                                    <span class="badge badge-warning">Beklemede</span>
+                                                    break;
+                                                case AuctionStatus.Active:
+                                                    <span class="badge badge-success">Aktif</span>
+                                                    break;
+                                                case AuctionStatus.Completed:
+                                                    <span class="badge badge-info">Tamamlandı</span>
+                                                    break;
+                                                case AuctionStatus.Cancelled:
+                                                    <span class="badge badge-danger">İptal Edildi</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (lastBid != null)
+                                            {
+                                                <span>@lastBid.Amount ₺</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Henüz teklif yok</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-info-circle"></i>
+                                                </a>
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

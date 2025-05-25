@@ -1,0 +1,103 @@
+@model VehicleAuction.Web.Models.Auction
+
+@{
+    ViewData["Title"] = "Teklif Ver";
+    bool isAuctionActive = Model.Status == VehicleAuction.Web.Models.AuctionStatus.Active && Model.StartDate <= DateTime.Now && Model.EndDate >= DateTime.Now;
+    bool isLoggedIn = Context.Session.GetInt32("UserId") != null;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Teklif Ver</h2>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.Vehicle?.ImageUrl))
+                            {
+                                <img src="@Model.Vehicle.ImageUrl" alt="@Model.Vehicle.Brand @Model.Vehicle.Model" class="img-fluid rounded mb-3" style="max-height: 300px; width: 100%; object-fit: cover;" />
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3">@Model.Vehicle?.Brand @Model.Vehicle?.Model (@Model.Vehicle?.Year)</h4>
+                            
+                            <dl class="row">
+                                <dt class="col-sm-4">Başlangıç Fiyatı</dt>
+                                <dd class="col-sm-8">@Model.StartingPrice.ToString("C")</dd>
+
+                                <dt class="col-sm-4">Minimum Artış</dt>
+                                <dd class="col-sm-8">@Model.MinimumIncrement.ToString("C")</dd>
+
+                                <dt class="col-sm-4">Mevcut En Yüksek Teklif</dt>
+                                <dd class="col-sm-8">@ViewBag.CurrentPrice.ToString("C")</dd>
+
+                                <dt class="col-sm-4">Başlangıç Tarihi</dt>
+                                <dd class="col-sm-8">@Model.StartDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                                <dt class="col-sm-4">Bitiş Tarihi</dt>
+                                <dd class="col-sm-8">@Model.EndDate.ToString("dd.MM.yyyy HH:mm")</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    @if (!isAuctionActive)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Bu ihaleye şu anda teklif verilemez. (İhale aktif değil veya süresi dolmuş)
+                        </div>
+                    }
+                    else if (!isLoggedIn)
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            Teklif verebilmek için <a href="/User/Login?returnUrl=/Auction/Bid/@Model.Id">giriş yapmalısınız</a>.
+                        </div>
+                    }
+                    else
+                    {
+                        <form asp-action="Bid" method="post">
+                            <input type="hidden" name="id" value="@Model.Id" />
+                            <div class="form-group mb-3">
+                                <label for="amount" class="form-label">Teklif Tutarı</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₺</span>
+                                    <input type="number" class="form-control" id="amount" name="amount" 
+                                           min="@(ViewBag.CurrentPrice + Model.MinimumIncrement)" 
+                                           step="0.01" required />
+                                </div>
+                                <small class="form-text text-muted">
+                                    Minimum teklif tutarı: @((ViewBag.CurrentPrice + Model.MinimumIncrement).ToString("C"))
+                                </small>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Bilgi:</strong> Teklifiniz, mevcut en yüksek tekliften en az @Model.MinimumIncrement.ToString("C") daha yüksek olmalıdır.
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> İhaleye Dön
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-gavel"></i> Teklif Ver
+                                </button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // Minimum teklif tutarını input'a set et
+        document.getElementById('amount').min = @(ViewBag.CurrentPrice + Model.MinimumIncrement);
+    </script>
+} 

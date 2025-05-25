@@ -1,0 +1,180 @@
+@model VehicleAuction.Web.Models.Vehicle
+
+@{
+    ViewData["Title"] = "Yeni Araç Ekle";
+}
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h3 class="card-title mb-0">
+            <i class="bi bi-plus-circle"></i> Yeni Araç Ekle
+        </h3>
+    </div>
+    <div class="card-body">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Brand" class="form-label"></label>
+                        <input asp-for="Brand" class="form-control" />
+                        <span asp-validation-for="Brand" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Model" class="form-label"></label>
+                        <input asp-for="Model" class="form-control" />
+                        <span asp-validation-for="Model" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Year" class="form-label"></label>
+                        <input asp-for="Year" class="form-control" type="number" />
+                        <span asp-validation-for="Year" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Mileage" class="form-label"></label>
+                        <input asp-for="Mileage" class="form-control" type="number" />
+                        <span asp-validation-for="Mileage" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="Price" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="Price" class="form-control" type="number" step="0.01" />
+                            <span class="input-group-text">₺</span>
+                        </div>
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label asp-for="EstimatedPrice" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="EstimatedPrice" class="form-control" type="number" step="0.01" />
+                            <span class="input-group-text">₺</span>
+                        </div>
+                        <span asp-validation-for="EstimatedPrice" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ImageUrl" class="form-label">Resim (Opsiyonel)</label>
+                <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                <small class="form-text text-muted">Araç resmi yüklemek zorunlu değildir.</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <div class="form-check">
+                    <input asp-for="IsAvailable" class="form-check-input" />
+                    <label asp-for="IsAvailable" class="form-check-label"></label>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Güvenlik Özellikleri</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-check mb-2">
+                                <input asp-for="ABS" class="form-check-input" />
+                                <label asp-for="ABS" class="form-check-label">ABS</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="ASR" class="form-check-input" />
+                                <label asp-for="ASR" class="form-check-label">ASR</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="CocukKilidi" class="form-check-input" />
+                                <label asp-for="CocukKilidi" class="form-check-label">Çocuk Kilidi</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="Distronic" class="form-check-input" />
+                                <label asp-for="Distronic" class="form-check-label">Distronic</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="ESP" class="form-check-input" />
+                                <label asp-for="ESP" class="form-check-label">ESP / VSA</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check mb-2">
+                                <input asp-for="GeceGorusSistemi" class="form-check-input" />
+                                <label asp-for="GeceGorusSistemi" class="form-check-label">Gece Görüş Sistemi</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="HavaYastigiSurucu" class="form-check-input" />
+                                <label asp-for="HavaYastigiSurucu" class="form-check-label">Hava Yastığı (Sürücü)</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="HavaYastigiYolcu" class="form-check-input" />
+                                <label asp-for="HavaYastigiYolcu" class="form-check-label">Hava Yastığı (Yolcu)</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="Immobilizer" class="form-check-input" />
+                                <label asp-for="Immobilizer" class="form-check-label">Immobilizer</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="Isofix" class="form-check-input" />
+                                <label asp-for="Isofix" class="form-check-label">Isofix</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check mb-2">
+                                <input asp-for="KorNoktaUyariSistemi" class="form-check-input" />
+                                <label asp-for="KorNoktaUyariSistemi" class="form-check-label">Kör Nokta Uyarı Sistemi</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="MerkeziKilit" class="form-check-input" />
+                                <label asp-for="MerkeziKilit" class="form-check-label">Merkezi Kilit</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="SeritTakipSistemi" class="form-check-input" />
+                                <label asp-for="SeritTakipSistemi" class="form-check-label">Şerit Takip Sistemi</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="YokusKalkisDesteği" class="form-check-input" />
+                                <label asp-for="YokusKalkisDesteği" class="form-check-label">Yokuş Kalkış Desteği</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="YorgunlukTespitSistemi" class="form-check-input" />
+                                <label asp-for="YorgunlukTespitSistemi" class="form-check-label">Yorgunluk Tespit Sistemi</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Kaydet
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Listeye Dön
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

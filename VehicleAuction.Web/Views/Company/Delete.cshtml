@@ -1,0 +1,50 @@
+@model VehicleAuction.Web.Models.Company
+
+@{
+    ViewData["Title"] = "Şirket Sil";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <h4 class="alert-heading">Dikkat!</h4>
+                        <p>Bu şirketi silmek istediğinizden emin misiniz?</p>
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TaxNumber)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.TaxNumber)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Phone)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Phone)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Address)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Address)</dd>
+                    </dl>
+
+                    <form asp-action="Delete" class="mt-4">
+                        <input type="hidden" asp-for="Id" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Sil
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Listeye Dön
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

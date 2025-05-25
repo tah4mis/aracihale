@@ -1,0 +1,77 @@
+@model VehicleAuction.Web.Models.Vehicle
+
+@{
+    ViewData["Title"] = "Araç Sil";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-danger mb-4">Araç Silme Onayı</h2>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Dikkat!</strong> Bu işlem geri alınamaz. Aşağıdaki araç bilgilerini silmek istediğinizden emin misiniz?
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" alt="@Model.Brand @Model.Model" class="img-fluid rounded mb-3" style="max-height: 200px; width: 100%; object-fit: cover;" />
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Marka</dt>
+                                <dd class="col-sm-8">@Model.Brand</dd>
+
+                                <dt class="col-sm-4">Model</dt>
+                                <dd class="col-sm-8">@Model.Model</dd>
+
+                                <dt class="col-sm-4">Yıl</dt>
+                                <dd class="col-sm-8">@Model.Year</dd>
+
+                                <dt class="col-sm-4">Kilometre</dt>
+                                <dd class="col-sm-8">@Model.Mileage.ToString("N0") km</dd>
+
+                                <dt class="col-sm-4">Fiyat</dt>
+                                <dd class="col-sm-8">@Model.Price.ToString("C")</dd>
+
+                                <dt class="col-sm-4">Durum</dt>
+                                <dd class="col-sm-8">
+                                    @if (Model.IsAvailable)
+                                    {
+                                        <span class="badge bg-success">Müsait</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Müsait Değil</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Listeye Dön
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Sil
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+} 

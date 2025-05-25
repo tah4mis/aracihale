@@ -1,0 +1,205 @@
+@model VehicleAuction.Web.Models.Auction
+
+@{
+    ViewData["Title"] = "İhale Detayı";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@(Model.Vehicle?.Brand ?? "Belirtilmemiş") @(Model.Vehicle?.Model ?? "") @(Model.Vehicle?.Year)</h3>
+                </div>
+                <div class="card-body">
+                    @if (Model.Vehicle == null)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Bu ihale için araç bilgisi bulunamadı.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                @if (!string.IsNullOrEmpty(Model.Vehicle.ImageUrl))
+                                {
+                                    <img src="@Model.Vehicle.ImageUrl" class="img-fluid rounded" alt="@Model.Vehicle.Brand @Model.Vehicle.Model" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light rounded p-5 text-center">
+                                        <i class="fas fa-car fa-5x text-muted"></i>
+                                        <p class="mt-3 text-muted">Görsel bulunmuyor</p>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-6">
+                                <h4>Araç Bilgileri</h4>
+                                <dl class="row">
+                                    <dt class="col-sm-4">Marka</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.Brand</dd>
+
+                                    <dt class="col-sm-4">Model</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.Model</dd>
+
+                                    <dt class="col-sm-4">Yıl</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.Year</dd>
+
+                                    <dt class="col-sm-4">Kilometre</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.Mileage.ToString("N0") km</dd>
+
+                                    <dt class="col-sm-4">Yakıt</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.FuelType</dd>
+
+                                    <dt class="col-sm-4">Vites</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.Transmission</dd>
+
+                                    <dt class="col-sm-4">Motor Hacmi</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.EngineSize cc</dd>
+
+                                    <dt class="col-sm-4">Motor Gücü</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.Horsepower hp</dd>
+
+                                    <dt class="col-sm-4">Renk</dt>
+                                    <dd class="col-sm-8">@Model.Vehicle.Color</dd>
+                                </dl>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h4>Açıklama</h4>
+                                <p>@Model.Vehicle.Description</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">İhale Bilgileri</h3>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Başlangıç Fiyatı</dt>
+                        <dd class="col-sm-9">@Model.StartingPrice.ToString("C")</dd>
+
+                        <dt class="col-sm-3">Minimum Artış</dt>
+                        <dd class="col-sm-9">@Model.MinimumIncrement.ToString("C")</dd>
+
+                        <dt class="col-sm-3">Başlangıç Tarihi</dt>
+                        <dd class="col-sm-9">@Model.StartDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-3">Bitiş Tarihi</dt>
+                        <dd class="col-sm-9">@Model.EndDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-3">Satıcı</dt>
+                        <dd class="col-sm-9">@(Model.Company?.Name ?? "Belirtilmemiş")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Teklif Ver</h3>
+                </div>
+                <div class="card-body">
+                    @{
+                        bool isAuctionActive = Model.Status == AuctionStatus.Active && Model.StartDate <= DateTime.Now && Model.EndDate > DateTime.Now;
+                        bool isLoggedIn = Context.Session.GetInt32("UserId") != null;
+                        var currentPrice = Model.Bids.OrderByDescending(b => b.Amount).FirstOrDefault()?.Amount ?? Model.StartingPrice;
+                    }
+
+                    @if (!isAuctionActive)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Bu ihaleye şu anda teklif verilemez. (İhale aktif değil veya süresi dolmuş)
+                        </div>
+                    }
+                    else if (!isLoggedIn)
+                    {
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            Teklif verebilmek için <a href="/User/Login?returnUrl=/Auction/Details/@Model.Id">giriş yapmalısınız</a>.
+                        </div>
+                    }
+                    else
+                    {
+                        <form asp-action="PlaceBid" method="post">
+                            <input type="hidden" name="auctionId" value="@Model.Id" />
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Teklif Miktarı</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="amount" name="amount" 
+                                           min="@(currentPrice + Model.MinimumIncrement)" 
+                                           step="0.01" required />
+                                    <span class="input-group-text">₺</span>
+                                </div>
+                                <small class="form-text text-muted">
+                                    Minimum teklif tutarı: @((currentPrice + Model.MinimumIncrement).ToString("C"))
+                                </small>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Bilgi:</strong> Teklifiniz, mevcut en yüksek tekliften en az @Model.MinimumIncrement.ToString("C") daha yüksek olmalıdır.
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-gavel"></i> Teklif Ver
+                                </button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Teklif Geçmişi</h3>
+                </div>
+                <div class="card-body">
+                    @if (Model.Bids?.Any() == true)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tarih</th>
+                                        <th>Teklif Veren</th>
+                                        <th>Miktar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var bid in Model.Bids.OrderByDescending(b => b.CreatedAt))
+                                    {
+                                        <tr>
+                                            <td>@bid.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td>@bid.BidderName</td>
+                                            <td>@bid.Amount.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Henüz teklif verilmemiş.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

@@ -1,0 +1,208 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<!-- Hero Section -->
+<div class="hero-section bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold">Araç Müzayede Sistemine Hoş Geldiniz</h1>
+                <p class="lead">En iyi araçları en uygun fiyatlarla bulabileceğiniz güvenilir platform.</p>
+                <div class="mt-4">
+                    <a asp-controller="Vehicle" asp-action="Index" class="btn btn-light btn-lg me-3">Araçları Keşfet</a>
+                    <a asp-controller="Auction" asp-action="Index" class="btn btn-outline-light btn-lg">Müzayedeleri Gör</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img src="~/images/hero-car.jpg" alt="Lüks Araç" class="img-fluid rounded shadow-lg" onerror="this.src='https://via.placeholder.com/600x400?text=Araç+Müzayede'">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- İstatistikler -->
+<div class="container mb-5">
+    <div class="row text-center">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm stats-card">
+                <div class="card-body">
+                    <i class="fas fa-car fa-3x text-primary"></i>
+                    <h3 class="counter">@ViewBag.TotalVehicles</h3>
+                    <p class="text-muted">Toplam Araç</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-gavel fa-3x text-success mb-3"></i>
+                    <h3 class="counter">@ViewBag.ActiveAuctions</h3>
+                    <p class="text-muted">Aktif Müzayede</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-users fa-3x text-info mb-3"></i>
+                    <h3 class="counter">@ViewBag.TotalUsers</h3>
+                    <p class="text-muted">Kayıtlı Kullanıcı</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-check-circle fa-3x text-warning mb-3"></i>
+                    <h3 class="counter">@ViewBag.CompletedAuctions</h3>
+                    <p class="text-muted">Tamamlanan Müzayede</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Aktif Müzayedeler -->
+<div class="container mb-5">
+    <h2 class="text-center mb-4">Aktif Müzayedeler</h2>
+    <div class="row">
+        @if (ViewBag.ActiveAuctionsList != null && ViewBag.ActiveAuctionsList.Count > 0)
+        {
+            foreach (var auction in ViewBag.ActiveAuctionsList)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm auction-card">
+                        <img src="@auction.Vehicle.ImageUrl" class="card-img-top" alt="@auction.Vehicle.Brand @auction.Vehicle.Model" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@auction.Vehicle.Brand @auction.Vehicle.Model</h5>
+                            <p class="card-text">
+                                <small class="text-muted">Başlangıç: @auction.StartDate.ToString("dd/MM/yyyy HH:mm")</small><br>
+                                <small class="text-muted">Bitiş: @auction.EndDate.ToString("dd/MM/yyyy HH:mm")</small>
+                            </p>
+                            @{
+                                decimal currentPrice = auction.StartingPrice;
+                                if (auction.Bids != null && auction.Bids.Count > 0)
+                                {
+                                    decimal maxBid = auction.StartingPrice;
+                                    foreach (var bid in auction.Bids)
+                                    {
+                                        if (bid.Amount > maxBid)
+                                        {
+                                            maxBid = bid.Amount;
+                                        }
+                                    }
+                                    currentPrice = maxBid;
+                                }
+                            }
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 mb-0">@currentPrice.ToString("C")</span>
+                                <a asp-controller="Auction" asp-action="Details" asp-route-id="@auction.Id" class="btn btn-primary">Detaylar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p class="text-muted">Şu anda aktif müzayede bulunmamaktadır.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Son Eklenen Araçlar -->
+<div class="container mb-5">
+    <h2 class="text-center mb-4">Son Eklenen Araçlar</h2>
+    <div class="row">
+        @if (ViewBag.RecentVehicles != null && ViewBag.RecentVehicles.Count > 0)
+        {
+            foreach (var vehicle in ViewBag.RecentVehicles)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm vehicle-card">
+                        <img src="@vehicle.ImageUrl" class="card-img-top" alt="@vehicle.Brand @vehicle.Model" style="height: 160px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@vehicle.Brand @vehicle.Model</h5>
+                            <p class="card-text">
+                                <small class="text-muted">@vehicle.Year - @vehicle.Mileage km</small>
+                            </p>
+                            <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-outline-primary w-100">İncele</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p class="text-muted">Henüz araç eklenmemiş.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Özellikler -->
+<div class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 feature-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h4>Güvenli Alışveriş</h4>
+                    <p class="text-muted">Tüm araçlar detaylı kontrol edilir ve güvenli ödeme seçenekleri sunulur.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 feature-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-tags fa-3x text-success mb-3"></i>
+                    <h4>Uygun Fiyatlar</h4>
+                    <p class="text-muted">Rekabetçi fiyatlarla hayalinizdeki araca sahip olma fırsatı.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100 feature-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-headset fa-3x text-info mb-3"></i>
+                    <h4>7/24 Destek</h4>
+                    <p class="text-muted">Uzman ekibimiz her zaman yanınızda, sorularınızı yanıtlamaya hazır.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // Sayaç animasyonu için basit bir fonksiyon
+        function animateCounter(element) {
+            const target = parseInt(element.textContent);
+            let count = 0;
+            const duration = 2000;
+            const increment = target / (duration / 16);
+            
+            const timer = setInterval(() => {
+                count += increment;
+                if (count >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(count);
+                }
+            }, 16);
+        }
+
+        // Sayfa yüklendiğinde sayaçları animasyonlu göster
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.counter').forEach(counter => {
+                animateCounter(counter);
+            });
+        });
+    </script>
+}

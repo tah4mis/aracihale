@@ -1,0 +1,59 @@
+@model VehicleAuction.Web.Models.Company
+
+@{
+    ViewData["Title"] = "Şirket Detayları";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.TaxNumber)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.TaxNumber)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Phone)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Phone)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Address)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Address)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CreatedAt)</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.CreatedAt)</dd>
+
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.IsActive)</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge badge-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">Pasif</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    <div class="mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Düzenle
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Listeye Dön
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

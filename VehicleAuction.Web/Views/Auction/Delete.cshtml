@@ -1,0 +1,74 @@
+@model VehicleAuction.Web.Models.Auction
+
+@{
+    ViewData["Title"] = "İhale Sil";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@ViewData["Title"]</h3>
+                    <div class="card-tools">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Geri
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Bu ihaleyi silmek istediğinizden emin misiniz?
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-3">Araç</dt>
+                        <dd class="col-sm-9">@(Model.Vehicle?.Brand ?? "Belirtilmemiş") @(Model.Vehicle?.Model ?? "")</dd>
+
+                        <dt class="col-sm-3">Başlangıç Fiyatı</dt>
+                        <dd class="col-sm-9">@Model.StartingPrice ₺</dd>
+
+                        <dt class="col-sm-3">Minimum Artış</dt>
+                        <dd class="col-sm-9">@Model.MinimumIncrement ₺</dd>
+
+                        <dt class="col-sm-3">Başlangıç Tarihi</dt>
+                        <dd class="col-sm-9">@Model.StartDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-3">Bitiş Tarihi</dt>
+                        <dd class="col-sm-9">@Model.EndDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-3">Durum</dt>
+                        <dd class="col-sm-9">
+                            @switch (Model.Status)
+                            {
+                                case AuctionStatus.Pending:
+                                    <span class="badge badge-warning">Beklemede</span>
+                                    break;
+                                case AuctionStatus.Active:
+                                    <span class="badge badge-success">Aktif</span>
+                                    break;
+                                case AuctionStatus.Completed:
+                                    <span class="badge badge-info">Tamamlandı</span>
+                                    break;
+                                case AuctionStatus.Cancelled:
+                                    <span class="badge badge-danger">İptal Edildi</span>
+                                    break;
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3">Teklif Sayısı</dt>
+                        <dd class="col-sm-9">@Model.Bids.Count</dd>
+                    </dl>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="Id" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Sil
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
